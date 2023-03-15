@@ -1,5 +1,7 @@
 import crypto from 'node:crypto';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const createCypher = () => {
   if (process.env.PASSWORD_ENCRYPTION_ALGORITHM === undefined) {
