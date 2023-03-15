@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import connectDB from '../../database/connection.js';
 import { AuthRequest } from '../../types/auth-types.js';
 import app from '../../app.js';
+import { UserModel } from '../users/user-schema.js';
+import { encryptPassword } from './auth-utils.js';
 
 describe('Given an app with an auth router', () => {
   let mongoServer: MongoMemoryServer;
@@ -76,6 +78,19 @@ describe('Given an app with an auth router', () => {
         .expect(500);
 
       expect(response.status).toEqual(500);
+    });
+  });
+
+  describe('When a user to log with success email and password', () => {
+    test('Then it should be log in', async () => {
+      const user = {
+        email: 'hello@gmail.com',
+        password: 'password1sita',
+      };
+      const userDb = { ...user, password: encryptPassword(user.password) };
+      await UserModel.create(userDb);
+
+      await request(app).post('/auth/login').send(user).expect(201);
     });
   });
 });
