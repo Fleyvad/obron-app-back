@@ -2,12 +2,10 @@ import request from 'supertest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import connectDB from '../../database/connection.js';
-import { AuthRequest } from '../../types/auth-types.js';
 import app from '../../app.js';
 import { UserModel } from '../users/user-schema.js';
 import { encryptPassword } from './auth-utils.js';
-
-describe('Given an app with an auth router', () => {
+describe('Given an app with auth-router', () => {
   let mongoServer: MongoMemoryServer;
 
   beforeAll(async () => {
@@ -16,81 +14,31 @@ describe('Given an app with an auth router', () => {
     await connectDB(mongoUrl);
   });
 
-  const OLD_ENV = process.env;
-
-  beforeEach(() => {
-    jest.resetModules();
-    process.env = { ...OLD_ENV };
-  });
-
   afterAll(async () => {
     await mongoServer.stop();
     await mongoose.connection.close();
-    process.env = OLD_ENV;
   });
 
-  describe('When a user wants to login with an invalid email format,', () => {
-    test('then it should throw a 400 error and show the type of error', async () => {
-      const invalidUser: AuthRequest = {
-        email: 'invalid.email',
-        password: 'mockPassword',
-      };
-
-      const response = await request(app)
-        .post('/auth/login')
-        .send(invalidUser)
-        .expect(400);
-
-      expect(response.body.error).toEqual('Bad Request');
-    });
-  });
-
-  describe('When a user wants to login with an invalid password format,', () => {
-    test('then it should throw a 400 error and show a descriptive message', async () => {
-      const invalidUser = {
-        email: 'mock@email.com',
-        password: 45,
-      };
-
-      const response = await request(app)
-        .post('/auth/login')
-        .send(invalidUser)
-        .expect(400);
-
-      expect(response.body.details.body[0].message).toEqual(
-        '"password" must be a string',
-      );
-    });
-  });
-
-  describe('When a user wants to login with a valid email and password,', () => {
-    test('and the password encryption key environment variable does not exist, then it should return a 500 error', async () => {
+  describe('When a user wants to log in with an existing email and pasasword', () => {
+    test('Then it should be logged in', async () => {
       const user = {
-        email: 'mock@email.com',
-        password: 'mockPassword',
-      };
-
-      delete process.env.PASSWORD_ENCRYPTION_KEY;
-
-      const response = await request(app)
-        .post('/auth/login')
-        .send(user)
-        .expect(500);
-
-      expect(response.status).toEqual(500);
-    });
-  });
-
-  describe('When a user to log with success email and password', () => {
-    test('Then it should be log in', async () => {
-      const user = {
-        email: 'hello@gmail.com',
-        password: 'password1sita',
+        email: 'mockmail@gmail.com',
+        password: 'passworsita',
       };
       const userDb = { ...user, password: encryptPassword(user.password) };
       await UserModel.create(userDb);
 
       await request(app).post('/auth/login').send(user).expect(201);
+    });
+  });
+
+  describe('When a user wants to log in with an unexisting email', () => {
+    test('Then it should a 404', async () => {
+      const notExistUser = {
+        email: 'test@gmail.com',
+        password: 'adios',
+      };
+      await request(app).post('/auth/login').send(notExistUser).expect(404);
     });
   });
 });

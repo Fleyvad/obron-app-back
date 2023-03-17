@@ -3,6 +3,7 @@ import { UserModel } from '../users/user-schema.js';
 import { loginUserController } from './auth-controllers.js';
 import dotenv from 'dotenv';
 import { generateJWTToken } from './auth-utils.js';
+import { CustomHTTPError } from '../utils/errors/custom-http-error.js';
 dotenv.config();
 
 const OLD_ENV = process.env;
@@ -65,10 +66,9 @@ describe('Given a controller to log in a user', () => {
       next as NextFunction,
     );
 
-    expect(mockResponse.json).toHaveBeenCalledWith({
-      message: 'This user does not exist',
-    });
-    expect(mockResponse.status).toHaveBeenCalledWith(404);
+    expect(next).toHaveBeenCalledWith(
+      new CustomHTTPError(404, 'This user does not exist'),
+    );
   });
 
   test('When the jwt secret environment variable does not exist', async () => {
