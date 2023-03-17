@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import authRouter from './api/auth/auth-router.js';
-import errorHandler from './api/utils/error-handler.js';
+import errorHandler from './api/utils/errors/error-handler.js';
 
 const app = express();
 
