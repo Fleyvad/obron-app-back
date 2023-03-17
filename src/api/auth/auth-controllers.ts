@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 import { AuthRequest, LoginResponse } from '../../types/auth-types.js';
 import { UserModel } from '../users/user-schema.js';
+import { CustomHTTPError } from '../utils/errors/custom-http-error.js';
 import { encryptPassword, generateJWTToken } from './auth-utils.js';
 
 export const loginUserController: RequestHandler<
@@ -18,7 +19,8 @@ export const loginUserController: RequestHandler<
     const existingUser = await UserModel.findOne(filterUser).exec();
 
     if (existingUser === null) {
-      return res.status(404).json({ message: 'This user does not exist' });
+      // Return res.status(404).json({ message: 'This user does not exist' });
+      return next(new CustomHTTPError(404, 'This user does not exist'));
     }
 
     const userToken = generateJWTToken(email);
