@@ -1,14 +1,13 @@
+import errorHandler from './api/utils/errors/error-handler.js';
 import express from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser';
 import authRouter from './api/auth/auth-router.js';
-import errorHandler from './api/utils/errors/error-handler.js';
+import bodyParser from 'body-parser';
 
 const app = express();
 
-app.disable('x-powered-by');
-
 app.use(cors());
+app.disable('x-powered-by');
 
 app.get('/', (_req, res) => {
   res.json('Server ON');
@@ -17,7 +16,6 @@ app.get('/', (_req, res) => {
 app.use(express.json());
 app.use('/auth', authRouter);
 app.use(bodyParser.json());
-
 app.use(errorHandler);
 
 export default app;
