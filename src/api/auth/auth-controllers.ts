@@ -1,16 +1,19 @@
 import { RequestHandler } from 'express';
-import { AuthRequest, LoginResponse } from '../../types/auth-types.js';
-import { UserModel } from '../users/user-schema.js';
+import {
+  AuthLoginRequest,
+  AuthRequest,
+  LoginResponse,
+} from '../../types/auth-types.js';
+import { UserModel, UserRegistration } from '../users/user-schema.js';
 import { CustomHTTPError } from '../utils/errors/custom-http-error.js';
 import { encryptPassword, generateJWTToken } from './auth-utils.js';
 
 export const loginUserController: RequestHandler<
   unknown,
   LoginResponse | { message: string },
-  AuthRequest
+  AuthLoginRequest
 > = async (req, res, next) => {
   const { email, password } = req.body;
-
   try {
     const filterUser = {
       email,
@@ -29,4 +32,31 @@ export const loginUserController: RequestHandler<
   } catch (error) {
     next(error);
   }
+};
+
+export const registerUserController: RequestHandler<
+  unknown,
+  unknown,
+  AuthRequest
+> = async (req, res, next) => {
+  const { userName, email, password } = req.body;
+
+  const existingUser = await UserModel.findOne({ email }).exec();
+  if (existingUser !== null) {
+    return next(
+      new CustomHTTPError(
+        409,
+        'A user account already exits with this email address',
+      ),
+    );
+  }
+
+  const newUser: UserRegistration = {
+    userName,
+    email,
+    password: encryptPassword(password),
+  };
+
+  await UserModel.create(newUser);
+  return res.status(201).json({ msg: 'User has been successfully registered' });
 };
