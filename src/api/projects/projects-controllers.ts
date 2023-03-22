@@ -21,3 +21,15 @@ export const createProjectController: RequestHandler<
     next(error);
   }
 };
+
+export const getAllProjectsController: RequestHandler<
+  unknown,
+  Project[] | { msg: string }
+> = async (_req, res, next) => {
+  try {
+    const getProjects = await ProjectModel.find({}).exec();
+    res.json(getProjects);
+  } catch (error) {
+    next(error);
+  }
+};

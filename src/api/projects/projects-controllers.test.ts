@@ -1,6 +1,10 @@
 import { Project, ProjectModel } from './projects-schema';
 import { Request, Response } from 'express';
-import { createProjectController } from './projects-controllers';
+import {
+  createProjectController,
+  getAllProjectsController,
+} from './projects-controllers';
+import mongoose from 'mongoose';
 
 describe('Given a controller to create projects', () => {
   const mockResponse = {
@@ -90,5 +94,63 @@ describe('Given a controller to create projects', () => {
 
     expect(mockResponse.status).toHaveBeenCalledWith(201);
     expect(mockResponse.json).toHaveBeenCalledWith(mockNewProject);
+  });
+});
+
+describe('Given a controller to get all projects', () => {
+  const mockRequest = {} as Partial<Request>;
+
+  const mockResponse = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+  } as Partial<Response>;
+
+  const next = jest.fn();
+
+  const mockProjects = {
+    _id: new mongoose.Types.ObjectId('123456789123456789123456'),
+    projectName: 'Name',
+    date: 1999,
+    description: 'Cositas de obras',
+    resources: {
+      date: 1999,
+      enterprise: 'Obron',
+      worker: 'Obronio',
+      hours: 3,
+      tools: 'pistolete',
+      vehicles: 'mini',
+    },
+    incidences: {
+      description: 'Cositas de obras',
+      imgUrl: 'https//:Obron',
+    },
+  };
+
+  test('when the database response is successful, the user should receive a list of projects', async () => {
+    ProjectModel.find = jest
+      .fn()
+      .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockProjects) });
+
+    await getAllProjectsController(
+      mockRequest as Request,
+      mockResponse as Response,
+      next,
+    );
+
+    expect(mockResponse.json).toHaveBeenCalledWith(mockProjects);
+  });
+
+  test('when an error is thrown, it should be passed on to be handled', async () => {
+    ProjectModel.find = jest
+      .fn()
+      .mockReturnValue({ exec: jest.fn().mockRejectedValue(null) });
+
+    await getAllProjectsController(
+      mockRequest as Request,
+      mockResponse as Response,
+      next,
+    );
+
+    expect(next).toHaveBeenCalled();
   });
 });
