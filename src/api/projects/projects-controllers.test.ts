@@ -10,6 +10,7 @@ describe('Given a controller to create projects', () => {
   const mockResponse = {
     json: jest.fn(),
     status: jest.fn().mockReturnThis(),
+    locals: { imgUrl: 'https//:Obron' },
   } as Partial<Response<Project | { message: string }>>;
 
   const next = jest.fn();
@@ -26,10 +27,8 @@ describe('Given a controller to create projects', () => {
       tools: 'pistolete',
       vehicles: 'mini',
     },
-    incidences: {
-      description: 'Cositas de obras',
-      imgUrl: 'https//:Obron',
-    },
+    incidences: 'Cositas de obras',
+    imgUrl: 'https//:Obron',
   };
   ProjectModel.create = jest.fn().mockRejectedValue(project);
 
@@ -58,25 +57,23 @@ describe('Given a controller to create projects', () => {
     const validMockRequest = {
       body: {
         projectName: 'New Project',
+        date: 1999,
+        description: 'Cositas de obras',
+        resources: {
+          date: 1999,
+          enterprise: 'Obron',
+          worker: 'Obronio',
+          hours: 3,
+          tools: 'pistolete',
+          vehicles: 'mini',
+        },
+        incidences: 'Cositas de obras',
       },
     } as Partial<Request>;
 
     const mockNewProject = {
-      projectName: 'Name',
-      date: 1999,
-      description: 'Cositas de obras',
-      resources: {
-        date: 1999,
-        enterprise: 'Obron',
-        worker: 'Obronio',
-        hours: 3,
-        tools: 'pistolete',
-        vehicles: 'mini',
-      },
-      incidences: {
-        description: 'Cositas de obras',
-        imgUrl: 'https//:Obron',
-      },
+      ...validMockRequest.body,
+      imgUrl: mockResponse.locals?.imgUrl,
     };
 
     ProjectModel.create = jest.fn().mockResolvedValue(mockNewProject);
@@ -91,9 +88,8 @@ describe('Given a controller to create projects', () => {
       mockResponse as Response<Project | { msg: string }>,
       next,
     );
-
-    expect(mockResponse.status).toHaveBeenCalledWith(201);
     expect(mockResponse.json).toHaveBeenCalledWith(mockNewProject);
+    expect(mockResponse.status).toHaveBeenCalledWith(201);
   });
 });
 
@@ -120,10 +116,8 @@ describe('Given a controller to get all projects', () => {
       tools: 'pistolete',
       vehicles: 'mini',
     },
-    incidences: {
-      description: 'Cositas de obras',
-      imgUrl: 'https//:Obron',
-    },
+    incidences: 'Cositas de obras',
+    imgUrl: 'https//:Obron',
   };
 
   test('when the database response is successful, the user should receive a list of projects', async () => {
