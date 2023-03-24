@@ -23,14 +23,14 @@ export const projectValidation = {
     projectName: Joi.string(),
     date: Joi.date(),
     description: Joi.string(),
-    resources: {
+    resources: Joi.object({
       date: Joi.date(),
       enterprise: Joi.string(),
       worker: Joi.string(),
       hours: Joi.number(),
       tools: Joi.string(),
       vehicles: Joi.string(),
-    },
+    }),
     incidences: Joi.string(),
     imgUrl: Joi.string(),
   }),
