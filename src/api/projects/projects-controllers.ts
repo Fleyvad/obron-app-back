@@ -14,7 +14,7 @@ export const createProjectController: RequestHandler<
       throw new CustomHTTPError(400, 'your project has no name');
     }
 
-    const newProject: Project = { ...req.body };
+    const newProject: Project = { ...req.body, imgUrl: res.locals.picture };
     const project = await ProjectModel.create(newProject);
     return res.status(201).json(project);
   } catch (error) {
