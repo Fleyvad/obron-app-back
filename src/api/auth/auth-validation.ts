@@ -17,3 +17,21 @@ export const registerValidation = {
       .required(),
   }),
 };
+
+export const projectValidation = {
+  body: Joi.object({
+    projectName: Joi.string(),
+    date: Joi.date(),
+    description: Joi.string(),
+    resources: {
+      date: Joi.date(),
+      enterprise: Joi.string(),
+      worker: Joi.string(),
+      hours: Joi.number(),
+      tools: Joi.string(),
+      vehicles: Joi.string(),
+    },
+    incidences: Joi.string(),
+    imgUrl: Joi.string(),
+  }),
+};
