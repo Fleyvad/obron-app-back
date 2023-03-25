@@ -19,7 +19,7 @@ export const authMiddleware: RequestHandler = (req, res, next) => {
     jwtToken,
     process.env.JWT_SECRET,
   ) as jwt.JwtPayload;
-
+  res.locals.email = payload.email;
   res.locals.id = payload.id;
   next();
 };

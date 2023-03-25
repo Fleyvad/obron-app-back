@@ -12,10 +12,8 @@ export interface Project {
     tools: string;
     vehicles: string;
   };
-  incidences: {
-    description: string;
-    imgUrl: string;
-  };
+  incidences: string;
+  imgUrl: string;
 }
 
 const projectSchema = new Schema<Project>({
@@ -30,10 +28,8 @@ const projectSchema = new Schema<Project>({
     tools: String,
     vehicles: String,
   },
-  incidences: {
-    description: String,
-    imgUrl: String,
-  },
+  incidences: String,
+  imgUrl: String,
 });
 
 export const ProjectModel = mongoose.model<Project>(
