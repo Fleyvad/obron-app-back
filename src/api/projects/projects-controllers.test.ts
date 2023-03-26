@@ -131,7 +131,7 @@ describe('Given a controller to get all projects', () => {
       next,
     );
 
-    expect(mockResponse.json).toHaveBeenCalledWith(mockProjects);
+    expect(mockResponse.json).toHaveBeenCalledWith({ projects: mockProjects });
   });
 
   test('when an error is thrown, it should be passed on to be handled', async () => {
