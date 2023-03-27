@@ -21,10 +21,10 @@ export const registerValidation = {
 export const projectValidation = {
   body: Joi.object({
     projectName: Joi.string(),
-    date: Joi.date(),
+    date: Joi.number(),
     description: Joi.string(),
     resources: Joi.object({
-      date: Joi.date(),
+      date: Joi.number(),
       enterprise: Joi.string(),
       worker: Joi.string(),
       hours: Joi.number(),
