@@ -17,10 +17,12 @@ export const supabaseMiddleware: RequestHandler<
   let projectPicture;
 
   if (fileBuffer !== undefined) {
-    const fileName = `${email}${Date.now()}`;
+    const fileName = `${email}${Date.now()}.webp`;
     const { error } = await supabase.storage
       .from(PROJECT_BUCKET_NAME)
-      .upload(fileName, fileBuffer);
+      .upload(fileName, fileBuffer, {
+        contentType: 'image/webp',
+      });
 
     if (error === null) {
       const { data } = supabase.storage
