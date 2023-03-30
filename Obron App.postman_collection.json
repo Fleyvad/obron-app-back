@@ -1,0 +1,180 @@
+{
+  "info": {
+    "_postman_id": "fc54267e-7520-4a2f-a856-5e4dbadb8ee5",
+    "name": "Obron App",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "25347886"
+  },
+  "item": [
+    {
+      "name": "https://paco-leyva-final-project-back-202301-mal.onrender.com/auth/register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\"userName\": \"Obronisio\" ,\n\"email\": \"obronisio@gmail.com\",\n\"password\": \"123456789\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://paco-leyva-final-project-back-202301-mal.onrender.com/auth/register",
+          "protocol": "https",
+          "host": [
+            "paco-leyva-final-project-back-202301-mal",
+            "onrender",
+            "com"
+          ],
+          "path": ["auth", "register"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://paco-leyva-final-project-back-202301-mal.onrender.com/auth/login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\"email\": \"obronisio@gmail.com\",\n\"password\": \"123456789\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://paco-leyva-final-project-back-202301-mal.onrender.com/auth/login",
+          "protocol": "https",
+          "host": [
+            "paco-leyva-final-project-back-202301-mal",
+            "onrender",
+            "com"
+          ],
+          "path": ["auth", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": " https://paco-leyva-final-project-back-202301-mal.onrender.com/api/v1/projects/create",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9icm9uaXNpb0BnbWFpbC5jb20iLCJpYXQiOjE2ODAxODMzOTF9.jDYWp2T9e7X8HhVOy20eMn23Nug75164vf0-SQYgSOI",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "upload",
+              "type": "file",
+              "src": []
+            },
+            {
+              "key": "projectName",
+              "value": "NAME PROJECT",
+              "type": "text"
+            },
+            {
+              "key": "date",
+              "value": "2023",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "Desmontaje con recuperación de carpintería acristalada de aluminio situada en fachada de patio inte- rior, entre 3 y 6 m2 de superficie, con medios manuales, sin deteriorar los elementos constructivos a los que está sujeta.",
+              "type": "text"
+            },
+            {
+              "key": "resources[date]",
+              "value": "2023",
+              "type": "text"
+            },
+            {
+              "key": "resources[enterprise]",
+              "value": "ObronSA",
+              "type": "text"
+            },
+            {
+              "key": "resources[worker]",
+              "value": "Obronisio",
+              "type": "text"
+            },
+            {
+              "key": "resources[hours]",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "resources[tools]",
+              "value": "",
+              "type": "text"
+            },
+            {
+              "key": "resources[vehicles]",
+              "value": "Retro",
+              "type": "text"
+            },
+            {
+              "key": "incidences",
+              "value": "El precio no incluye el desmontaje previo de las hojas de la carpintería.\nSe medirá la superficie realmente demolida.",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://paco-leyva-final-project-back-202301-mal.onrender.com/api/v1/projects/create",
+          "protocol": "https",
+          "host": [
+            "paco-leyva-final-project-back-202301-mal",
+            "onrender",
+            "com"
+          ],
+          "path": ["api", "v1", "projects", "create"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": " https://paco-leyva-final-project-back-202301-mal.onrender.com/api/v1/projects",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY29AZ21haWwuY29tIiwiaWF0IjoxNjc5MzEyMjQ1fQ._hojnZCoBw8p_ty7vIIW83jhktJK8jicduvkq-7DclY",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://paco-leyva-final-project-back-202301-mal.onrender.com/api/v1/projects",
+          "protocol": "https",
+          "host": [
+            "paco-leyva-final-project-back-202301-mal",
+            "onrender",
+            "com"
+          ],
+          "path": ["api", "v1", "projects"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
