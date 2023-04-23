@@ -2,10 +2,10 @@ import mongoose, { Schema } from 'mongoose';
 
 export interface Project {
   projectName: string;
-  date: number;
+  date: Date;
   description: string;
   resources: {
-    date: number;
+    date: Date;
     enterprise: string;
     worker: string;
     hours: number;
@@ -18,10 +18,10 @@ export interface Project {
 
 const projectSchema = new Schema<Project>({
   projectName: String,
-  date: Number,
+  date: Date,
   description: String,
   resources: {
-    date: Number,
+    date: Date,
     enterprise: String,
     worker: String,
     hours: Number,
