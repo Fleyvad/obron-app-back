@@ -5,6 +5,7 @@ import { upload } from './img-upload-middleware.js';
 import {
   createProjectController,
   getAllProjectsController,
+  getProjectByIdController,
 } from './projects-controllers.js';
 import { supabaseMiddleware } from './supabase-middleware.js';
 
@@ -20,5 +21,6 @@ projectsRouter
   );
 
 projectsRouter.route('/').get(getAllProjectsController);
+projectsRouter.route('/:id').get(getProjectByIdController);
 
 export default projectsRouter;
