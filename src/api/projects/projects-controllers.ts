@@ -33,3 +33,18 @@ export const getAllProjectsController: RequestHandler<
     next(error);
   }
 };
+
+export const getProjectByIdController: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  const { id } = req.params;
+
+  const project = await ProjectModel.findById(id).exec();
+  if (project === null) {
+    return next(new CustomHTTPError(404, 'This OBRON does not exist'));
+  }
+
+  res.status(200).json(project);
+};

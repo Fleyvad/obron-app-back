@@ -3,8 +3,10 @@ import { Request, Response } from 'express';
 import {
   createProjectController,
   getAllProjectsController,
+  getProjectByIdController,
 } from './projects-controllers';
 import mongoose from 'mongoose';
+import { CustomHTTPError } from '../utils/errors/custom-http-error';
 
 describe('Given a controller to create projects', () => {
   const mockResponse = {
@@ -93,6 +95,23 @@ describe('Given a controller to create projects', () => {
   });
 });
 
+const mockProject = {
+  _id: new mongoose.Types.ObjectId('123456789123456789123456'),
+  projectName: 'Name',
+  date: 1999,
+  description: 'Cositas de obras',
+  resources: {
+    date: 1999,
+    enterprise: 'Obron',
+    worker: 'Obronio',
+    hours: 3,
+    tools: 'pistolete',
+    vehicles: 'mini',
+  },
+  incidences: 'Cositas de obras',
+  imgUrl: 'https//:Obron',
+};
+
 describe('Given a controller to get all projects', () => {
   const mockRequest = {} as Partial<Request>;
 
@@ -103,27 +122,10 @@ describe('Given a controller to get all projects', () => {
 
   const next = jest.fn();
 
-  const mockProjects = {
-    _id: new mongoose.Types.ObjectId('123456789123456789123456'),
-    projectName: 'Name',
-    date: 1999,
-    description: 'Cositas de obras',
-    resources: {
-      date: 1999,
-      enterprise: 'Obron',
-      worker: 'Obronio',
-      hours: 3,
-      tools: 'pistolete',
-      vehicles: 'mini',
-    },
-    incidences: 'Cositas de obras',
-    imgUrl: 'https//:Obron',
-  };
-
   test('when the database response is successful, the user should receive a list of projects', async () => {
     ProjectModel.find = jest
       .fn()
-      .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockProjects) });
+      .mockReturnValue({ exec: jest.fn().mockResolvedValue(mockProject) });
 
     await getAllProjectsController(
       mockRequest as Request,
@@ -131,7 +133,7 @@ describe('Given a controller to get all projects', () => {
       next,
     );
 
-    expect(mockResponse.json).toHaveBeenCalledWith({ projects: mockProjects });
+    expect(mockResponse.json).toHaveBeenCalledWith({ projects: mockProject });
   });
 
   test('when an error is thrown, it should be passed on to be handled', async () => {
@@ -146,5 +148,50 @@ describe('Given a controller to get all projects', () => {
     );
 
     expect(next).toHaveBeenCalled();
+  });
+});
+describe('Given a getByIdcontroller business', () => {
+  const request = {
+    params: { id: '123456789123456789123456' },
+  } as Partial<Request>;
+  const response = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+  } as Partial<Response>;
+  const next = jest.fn();
+
+  ProjectModel.findById = jest.fn().mockImplementation(() => ({
+    exec: jest.fn().mockResolvedValue(mockProject),
+  }));
+
+  describe('When the user tries to search for a business by id', () => {
+    test('Then it should be found', async () => {
+      await getProjectByIdController(
+        request as Request,
+        response as Response,
+        next,
+      );
+
+      expect(response.json).toHaveBeenCalledWith(mockProject);
+      expect(response.status).toHaveBeenCalledWith(200);
+      expect(ProjectModel.findById).toHaveBeenCalledWith(
+        '123456789123456789123456',
+      );
+    });
+  });
+  describe('When the user tries to search  for a project by id and dont exist', () => {
+    test('Then it should recived a 404 error', async () => {
+      ProjectModel.findById = jest.fn().mockImplementation(() => ({
+        exec: jest.fn().mockResolvedValue(null),
+      }));
+      await getProjectByIdController(
+        request as Request,
+        response as Response,
+        next,
+      );
+      expect(next).toHaveBeenCalledWith(
+        new CustomHTTPError(404, 'This OBRON does not exist'),
+      );
+    });
   });
 });
